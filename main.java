@@ -1,6 +1,12 @@
+import dynamique.ByteArrayClass;
+import dynamique.ByteArrayClasseLoader;
 import dynamique.VoitureFactory;
 import voiture.Surveillable;
 import voiture.Voiture;
+
+import javax.tools.*;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
