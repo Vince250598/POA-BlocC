@@ -2,7 +2,7 @@ package dynamique;
 
 import voiture.Surveillable;
 import voiture.Voiture;
-
+import voiture.VoitureSport;
 import javax.tools.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -10,13 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VoitureFactory {
-    //regarder VoitureFactory pour exemple
-
     public enum ModeConstruction {INSTANCIATION, REFLEXION, META};
-
-    public static Voiture buildVoiture(ModeConstruction mode, boolean sport, int vitesse) {
-        return new Voiture(0);
-    }
 
     private void buildMetaVoiture(boolean sport, int vitesse){
 
@@ -124,5 +118,28 @@ public class VoitureFactory {
     private static void genererConstructeurs(String nomClasse, int vitesse, StringBuilder sb) {
 
         sb.append("public " + nomClasse + "(){ super("+vitesse+";}\n");
+    }
+
+    public static Voiture buildVoiture(ModeConstruction mode, boolean sport, int vitesse) {
+        if (mode == ModeConstruction.INSTANCIATION) {
+            if (sport) {
+                return new VoitureSport();
+            } else {
+                return new Voiture(vitesse);
+            }
+        } else if(mode == ModeConstruction.REFLEXION) {
+            try {
+                if(sport) {
+                    return (VoitureSport) Class.forName("VoitureSport").getDeclaredConstructor(int.class).newInstance(vitesse);
+                } else {
+                    return (Voiture) Class.forName("Voiture").getDeclaredConstructor(int.class).newInstance(vitesse);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        } else if(mode == ModeConstruction.META) {
+            //TODO
+        }
+        return null;
     }
 }

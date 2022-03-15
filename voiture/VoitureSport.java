@@ -2,7 +2,7 @@ package voiture;
 
 public class VoitureSport extends Voiture{
 
-    VoitureSport(){
+    public VoitureSport(){
         super(200);
     }
 }
