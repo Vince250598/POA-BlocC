@@ -1,10 +1,10 @@
 package voiture;
 
 public class Voiture {
-    private int vitesse;
-    private int position;
-    private int id;
-    private static int _id = 0;
+    protected int vitesse;
+    protected int position;
+    protected int id;
+    protected static int _id = 0;
 
     public Voiture(int vitesse) {
         this.vitesse = vitesse;

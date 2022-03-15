@@ -1,5 +1,5 @@
 package voiture;
 
 public interface Surveillable {
-    int surveiller(int limite);
+    public int surveiller(int limite);
 }

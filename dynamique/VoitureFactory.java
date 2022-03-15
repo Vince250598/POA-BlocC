@@ -12,7 +12,7 @@ import java.util.List;
 public class VoitureFactory {
     public enum ModeConstruction {INSTANCIATION, REFLEXION, META};
 
-    private void buildMetaVoiture(boolean sport, int vitesse){
+    private static Voiture buildMetaVoiture(boolean sport, int vitesse){
 
         // ******** ETAPE #1 : Préparation pour la compilation
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -35,11 +35,10 @@ public class VoitureFactory {
         };
 
         // ******** ETAPE #2 : Génération du code source
-        List<JavaFileObject> sources =  null;
-        /*List.of(
-                VoitureFactory.buildSource("MetaVoitureSport", true),
-                VoitureFactory.buildSource("MetaVoiture", false)
-        );*/
+        List<JavaFileObject> sources = List.of(
+            VoitureFactory.buildSource("MetaVoitureSport", true, vitesse),
+            VoitureFactory.buildSource("MetaVoiture", false, vitesse)
+        );
 
         // ******** ETAPE #3 : Compilation
         JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, collector, null,
@@ -63,16 +62,21 @@ public class VoitureFactory {
 
         // ******** ETAPE #4 : Instanciation
         ByteArrayClasseLoader loader = new ByteArrayClasseLoader(classes);
-        List<Voiture> mesVoitures = new ArrayList<Voiture>();
+        Voiture maVoiture = null;
         try {
             // Recherche la classe dans le contexte "local" sinon il passe par le "loader"
-            mesVoitures.add((Voiture)(Class.forName("dynamique.Voiture", true, loader).getDeclaredConstructor().newInstance()));
-            mesVoitures.add((Voiture)(Class.forName("dynamique.Voiture6", true, loader).getDeclaredConstructor().newInstance()));
-            mesVoitures.add((Voiture)(Class.forName("dynamique.Voiture7", true, loader).getDeclaredConstructor().newInstance()));
-            mesVoitures.add((Voiture)(Class.forName("dynamique.Voiture8", true, loader).getDeclaredConstructor().newInstance()));
-            mesVoitures.add((Voiture)(Class.forName("dynamique.Voiture9", true, loader).getDeclaredConstructor().newInstance()));
-            // Creation d'une classe inexistante, erreur d'exécution plus loin en fin de programme
-            mesVoitures.add((Voiture)(Class.forName("dynamique.VoitureX", true, loader).getDeclaredConstructor().newInstance()));
+            if(sport){
+                maVoiture = (Voiture)(Class.forName("voiture.MetaVoitureSport", true, loader)
+                        .getDeclaredConstructor()
+                        .newInstance()
+                );
+            }
+            else{
+                maVoiture = (Voiture)(Class.forName("voiture.MetaVoiture", true, loader)
+                        .getDeclaredConstructor()
+                        .newInstance()
+                );
+            }
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -83,29 +87,25 @@ public class VoitureFactory {
             e.printStackTrace();
         }
 
-        // ******** ETAPE #5 : Exécution
-        for (Voiture t : mesVoitures){
-            System.out.println("CLASSE : " + t.getClass());
-            //System.out.println("X : " + t.getX());
-        }
+        // ******** ETAPE #5 : Renvoi
+        return maVoiture;
     }
 
 
-    public static JavaFileObject buildSource(String nomClasse, boolean sport) {
+    private static JavaFileObject buildSource(String nomClasse, boolean sport, int vitesse) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("package dynamique;\n");
+        sb.append("package voiture;\n");
         if(sport){
             sb.append("public class " + nomClasse + " extends VoitureSport implements Surveillable{\n");
-
-            genererConstructeurs(nomClasse, 200, sb);
+            sb.append("public " + nomClasse + "(){ super();}\n");
+        }
+        else{
+            sb.append("public class " + nomClasse + " extends Voiture implements Surveillable{\n");
+            sb.append("public " + nomClasse + "(){ super("+vitesse+");}\n");
         }
 
-        /*
-        genererAttributs(sb);
         genererMethodes(sb);
-
-         */
 
         sb.append("}\n");
 
@@ -116,8 +116,13 @@ public class VoitureFactory {
     }
 
     private static void genererConstructeurs(String nomClasse, int vitesse, StringBuilder sb) {
+        sb.append("public " + nomClasse + "(){ super("+vitesse+");}\n");
+    }
 
-        sb.append("public " + nomClasse + "(){ super("+vitesse+";}\n");
+    private static void genererMethodes(StringBuilder sb) {
+        sb.append("public int surveiller(int limite){" +
+                "   return vitesse - limite;\n" +
+                "}\n");
     }
 
     public static Voiture buildVoiture(ModeConstruction mode, boolean sport, int vitesse) {
@@ -138,7 +143,7 @@ public class VoitureFactory {
                 classNotFoundException.printStackTrace();
             }
         } else if(mode == ModeConstruction.META) {
-            //TODO
+            return buildMetaVoiture(sport, vitesse);
         }
         return null;
     }
