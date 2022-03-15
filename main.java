@@ -14,7 +14,7 @@ public class main {
     public static void main(String[] args) {
         List<Voiture> mesVoitures = new ArrayList<Voiture>();
         ajoutVoituresInstanciation(mesVoitures);
-        //ajoutVoituresReflexion(mesVoitures);
+        ajoutVoituresReflexion(mesVoitures);
         ajoutVoituresMeta(mesVoitures);
         try {
             int x = 0;

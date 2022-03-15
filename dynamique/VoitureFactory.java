@@ -135,9 +135,9 @@ public class VoitureFactory {
         } else if(mode == ModeConstruction.REFLEXION) {
             try {
                 if(sport) {
-                    return (VoitureSport) Class.forName("VoitureSport").getDeclaredConstructor(int.class).newInstance(vitesse);
+                    return (VoitureSport) Class.forName("voiture.VoitureSport").getDeclaredConstructor().newInstance();
                 } else {
-                    return (Voiture) Class.forName("Voiture").getDeclaredConstructor(int.class).newInstance(vitesse);
+                    return (Voiture) Class.forName("voiture.Voiture").getDeclaredConstructor(int.class).newInstance(vitesse);
                 }
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException classNotFoundException) {
                 classNotFoundException.printStackTrace();
