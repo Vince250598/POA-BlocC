@@ -14,7 +14,7 @@ public class ByteArrayClass extends SimpleJavaFileObject {
         super(URI.create("string:///" + name.replace('.', '/') + ".java"), Kind.SOURCE);
     }
 
-    public byte[] getCode(){
+    public byte[] getCode() {
         return out.toByteArray();
     }
 

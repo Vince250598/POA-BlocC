@@ -1,12 +1,7 @@
-import dynamique.ByteArrayClass;
-import dynamique.ByteArrayClasseLoader;
 import dynamique.VoitureFactory;
 import voiture.Surveillable;
 import voiture.Voiture;
 
-import javax.tools.*;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +14,7 @@ public class main {
         try {
             int x = 0;
             while (x++ < 20)
-                for (Voiture v : mesVoitures){
+                for (Voiture v : mesVoitures) {
                     System.out.println(v);
                     v.deplacement();
                     System.out.println(v);
@@ -29,6 +24,7 @@ public class main {
             e.printStackTrace();
         }
     }
+
     private static void ajoutVoituresInstanciation(List<Voiture>
                                                            mesVoitures) {
 
@@ -36,27 +32,28 @@ public class main {
                 INSTANCIATION, true, 0));
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
-                INSTANCIATION,false, 50));
+                INSTANCIATION, false, 50));
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
-                INSTANCIATION,false, 10));
+                INSTANCIATION, false, 10));
     }
+
     private static void ajoutVoituresMeta(List<Voiture> mesVoitures) {
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
                 META, true, 0));
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
-                META,false, 50));
+                META, false, 50));
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
-                META,false, 10));
+                META, false, 10));
     }
 
     private static void ajoutVoituresReflexion(List<Voiture> mesVoitures) {
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
-                REFLEXION,true, 0));
+                REFLEXION, true, 0));
 
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
                 REFLEXION, false, 50));
@@ -64,10 +61,11 @@ public class main {
         mesVoitures.add(VoitureFactory.buildVoiture(VoitureFactory.ModeConstruction.
                 REFLEXION, false, 10));
     }
+
     private static void surveillerVoiture(Voiture v) throws Exception {
-        if (v.getPosition() > 1000){
-            if (v.getClass().getName().contains("Meta")){
-                int depassement = ((Surveillable)v).surveiller(60);
+        if (v.getPosition() > 1000) {
+            if (v.getClass().getName().contains("Meta")) {
+                int depassement = ((Surveillable) v).surveiller(60);
                 if (depassement > 10)
                     throw new Exception("ID : " + v.getId() + " --> depassement de " + depassement + " (" + v.getClass() + ")");
             }

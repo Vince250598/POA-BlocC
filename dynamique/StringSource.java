@@ -12,7 +12,7 @@ public class StringSource extends SimpleJavaFileObject {
         this.code = code;
     }
 
-    public CharSequence getCharContent(boolean ignoreEncodingErrors){
+    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
         return code;
     }
 }
